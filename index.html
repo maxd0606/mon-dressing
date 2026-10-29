@@ -713,7 +713,7 @@ function mdCompteDemarrage(){
 function mdActualiserDemarrage(){
  const e=document.getElementById('mdDemarrageSwipe');if(!e)return;
  const c=mdCompteDemarrage();
- e.classList.toggle('hidden',c.pret||!univers);
+ e.classList.toggle('hidden',c.pret||!univers||document.getElementById('idees').classList.contains('hidden'));
  document.getElementById('mdProgressPantalons').textContent=Math.min(2,c.pantalons)+' / 2';
  document.getElementById('mdProgressPulls').textContent=Math.min(2,c.pulls)+' / 2';
  document.getElementById('mdProgressTshirts').textContent=Math.min(2,c.tshirts)+' / 2';
@@ -738,13 +738,13 @@ function mdAller(id){mdFermerMenu();page(id)}
 function mdRetourSwipe(){mdFermerMenu();page('idees')}
 function mdRecherche(){mdAller('accueil');const el=document.getElementById('recherche');el.classList.remove('hidden');el.focus()}
 function page(id){
- if(id==='idees')mdActualiserDemarrage();
  document.querySelectorAll('main section').forEach(sec=>sec.classList.add('hidden'));
  const target=document.getElementById(id==='idees'?'idees':id);
  if(target)target.classList.remove('hidden');
  document.querySelector('main').scrollTop=0;
  document.getElementById('mdBottomMenu').classList.toggle('hidden',id==='idees');
  afficher();
+ mdActualiserDemarrage();
 }
 function echapper(t){return String(t||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 // Empreinte visuelle : repère les images identiques ou très proches,
@@ -972,7 +972,7 @@ let styleLook='chic';
 function mdPremiereFermer(){document.getElementById('mdPremierePieces').classList.add('hidden');localStorage.setItem(cleUnivers('premiere_pieces_vue'),'oui')}
 function mdPremiereAjouter(){mdPremiereFermer();page('vetements');setTimeout(()=>{const el=document.getElementById('nom');if(el)el.focus()},100)}
 function mdPremierePlusTard(){mdPremiereFermer();page('idees')}
-function mdAfficherPremierePieces(){if(univers&&!vetements.length&&localStorage.getItem(cleUnivers('premiere_pieces_vue'))!=='oui')document.getElementById('mdPremierePieces').classList.remove('hidden')}
+function mdAfficherPremierePieces(){document.getElementById('mdPremierePieces').classList.add('hidden')}
 function choisirUnivers(u){
  initialiserUnivers(u);
  univers=u;localStorage.setItem('mdUnivers',u);
@@ -982,7 +982,9 @@ function choisirUnivers(u){
  document.body.classList.toggle('mode-homme',u==='homme');
  document.getElementById('bienvenue').classList.add('hidden');
  afficher();
- mdAfficherPremierePieces();mdActualiserDemarrage();
+ document.getElementById('mdPremierePieces').classList.add('hidden');
+ page('idees');
+ mdActualiserDemarrage();
 }
 function ajusterAccueil(){const pret=vetements.length>0||localStorage.getItem(cleUnivers('accueil'))==='oui';document.body.classList.toggle('dressing-pret',pret);document.getElementById('titreDressing').textContent=pret?'Mon dressing ♡':'Bienvenue dans ton dressing ♡'}
 function changerUnivers(){document.getElementById('bienvenue').classList.remove('hidden')}
