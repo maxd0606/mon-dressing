@@ -984,6 +984,11 @@ function choisirUnivers(u){
  afficher();
  document.getElementById('mdPremierePieces').classList.add('hidden');
  page('idees');
+ // Montrer immédiatement la préparation après le choix Homme/Femme.
+ if(!mdCompteDemarrage().pret){
+  const depart=document.getElementById('mdDemarrageSwipe');
+  depart.classList.remove('hidden');
+ }
  mdActualiserDemarrage();
 }
 function ajusterAccueil(){const pret=vetements.length>0||localStorage.getItem(cleUnivers('accueil'))==='oui';document.body.classList.toggle('dressing-pret',pret);document.getElementById('titreDressing').textContent=pret?'Mon dressing ♡':'Bienvenue dans ton dressing ♡'}
@@ -1451,7 +1456,7 @@ function sauverSuggestion(i,silencieux=false){
 document.body.classList.toggle('mode-homme',univers==='homme');
 if(!univers)document.getElementById('bienvenue').classList.remove('hidden');
 document.body.classList.toggle('mode-homme',univers==='homme');
-page('accueil');
+page(univers?'idees':'accueil');
 setTimeout(()=>{const e=document.getElementById('splash');if(e){e.classList.add('done');setTimeout(()=>e.remove(),650)}},1650);
 
 </script>
