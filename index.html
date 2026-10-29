@@ -627,7 +627,7 @@ main section#accueil{padding:12px 15px 20px!important;box-sizing:border-box!impo
 <input id="marque" placeholder="Ex. Adidas, Zara, Nike, Sandro…">
 <label>Catégorie</label>
 <select id="categorie">
-<option>Haut</option><option>Pantalon</option><option>Jupe</option>
+<option>Pull</option><option>T-shirt</option><option>Chemise / blouse</option><option>Pantalon</option><option>Jupe</option>
 <option>Robe</option><option>Veste / manteau</option>
 <option>Chaussures</option><option>Montre</option><option>Collier</option>
 <option>Bracelet</option><option>Bague</option><option>Chapeau / casquette</option>
@@ -705,8 +705,8 @@ function sauver(){
 }
 function mdCompteDemarrage(){
  const pantalons=vetements.filter(v=>v.categorie==='Pantalon').length;
- const pulls=vetements.filter(v=>v.categorie==='Haut' && /pull|sweat|maille|tricot|hoodie|cardigan/i.test(v.nom||'')).length;
- const tshirts=vetements.filter(v=>v.categorie==='Haut' && /t[ -]?shirts?|tee[ -]?shirts?|tee|tshirts?/i.test(v.nom||'')).length;
+ const pulls=vetements.filter(v=>v.categorie==='Pull' || (v.categorie==='Haut' && /pull|sweat|maille|tricot|hoodie|cardigan/i.test(v.nom||''))).length;
+ const tshirts=vetements.filter(v=>v.categorie==='T-shirt' || (v.categorie==='Haut' && /t[ -]?shirts?|tee[ -]?shirts?|tee|tshirts?/i.test(v.nom||''))).length;
  const vestes=vetements.filter(v=>v.categorie==='Veste / manteau').length;
  return {pantalons,pulls,tshirts,vestes,pret:pantalons>=2&&pulls>=2&&tshirts>=2&&vestes>=2};
 }
@@ -1182,8 +1182,27 @@ function scoreCoherenceStyle(groupe){
  if(styleLook==='casual')return (jean?11:0)+(basket?11:0)+(has(/pull|maille|t-shirt|tee-shirt/)?6:0)+(blazer&&jean?7:0)-(robe&&!basket?4:0);
  return (robe?15:0)+(chaussureChic?13:0)+(blazer?10:0)+(has(/bijou|collier|pochette/)?5:0)-(basket?24:0)-(jean?15:0);
 }
+// Filtre strict : ne jamais proposer une tenue incohérente avec le style choisi.
+function lookAdmissibleMD(groupe){
+ const txt=groupe.map(v=>(v.nom+' '+v.categorie).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')).join(' ');
+ const a=re=>re.test(txt);
+ const pieces=groupe.filter(v=>!['Montre','Collier','Bracelet','Bague','Chapeau / casquette','Sac','Ceinture','Lunettes','Écharpe / foulard','Accessoire'].includes(v.categorie));
+ const robe=pieces.some(v=>v.categorie==='Robe');
+ const bas=pieces.some(v=>['Pantalon','Jupe'].includes(v.categorie));
+ const haut=pieces.some(v=>['Haut','Pull','T-shirt','Chemise / blouse'].includes(v.categorie));
+ if(!robe&&!(bas&&haut))return false;
+ const baskets=a(/basket|sneaker|tennis|running/);
+ const jean=a(/\bjean\b|denim|jogging|survetement/);
+ const habille=a(/blazer|tailleur|costume|chemise|chemisier|blouse|mocassin|derby|richelieu|escarpin|talon|robe|jupe|pantalon de ville|pantalon habille/);
+ const soigne=a(/blazer|tailleur|chemise|chemisier|blouse|mocassin|derby|richelieu|escarpin|talon|robe|jupe|pantalon habille|pantalon de ville/);
+ const casual=a(/pull|maille|t-shirt|tee-shirt|jean|denim|basket|sneaker|gilet|cardigan/);
+ if(styleLook==='soiree')return !baskets&&!jean&&!a(/t-shirt|tee-shirt|sweat|hoodie|jogging/) && (robe || (soigne&&a(/blazer|tailleur|costume|chemise|escarpin|talon|mocassin|derby/)));
+ if(styleLook==='chic')return soigne && !a(/jogging|survetement|hoodie/) && !(baskets&&!habille);
+ if(styleLook==='casual')return casual&&!a(/robe de soiree|smoking|robe longue habillee/);
+ return false;
+}
 function afficherPropositions(){
- const hauts=vetements.filter(v=>v.categorie==='Haut'||v.categorie==='Robe');
+ const hauts=vetements.filter(v=>['Haut','Pull','T-shirt','Chemise / blouse','Robe'].includes(v.categorie));
  const bas=vetements.filter(v=>['Pantalon','Jupe'].includes(v.categorie));
  const chaussures=vetements.filter(v=>v.categorie==='Chaussures');
  const vestes=vetements.filter(v=>v.categorie==='Veste / manteau');
@@ -1218,7 +1237,7 @@ function afficherPropositions(){
   return (types.find(([nom,re])=>re.test(txt))||['autre'])[0];
  }
  const candidats=[];
- for(const p of propositions){
+ for(const p of propositions.filter(p=>lookAdmissibleMD(p.groupe))){
   // Un look sans accessoires est toujours possible.
   candidats.push({groupe:p.groupe,score:scoreEditorial(p.groupe),nAcc:0});
   const classes=new Map();
@@ -1246,11 +1265,18 @@ function afficherPropositions(){
  }
  // Diversité : ne pas présenter six fois les mêmes bijoux.
  const uniques=[];const vus=new Set();const utilisations=new Map();
- const quotas=[0,1,2,1,0,2,0,1,2,0,1,2,0,1,2,0,1,2];
+ // Le volume dépend des combinaisons de vêtements réellement disponibles,
+ // et non du nombre d'accessoires ou de photos en double.
+ const signaturesBase=new Set(candidats.filter(p=>p.nAcc===0).map(p=>signatureLook(p)));
+ const nombreBases=signaturesBase.size;
+ // Petite garde-robe : seulement les looks possibles. Grande : jusqu'à 120 looks variés.
+ const objectif=Math.min(120,Math.max(10,Math.ceil(nombreBases*1.5)));
+ const cycleAccessoires=[0,1,0,1,2,0,1,0,1,2];
+ const quotas=Array.from({length:objectif},(_,i)=>cycleAccessoires[i%cycleAccessoires.length]);
  const preferences=lirePreferencesLooks();
  for(let position=0;position<quotas.length;position++){
   const cible=quotas[position];
-  const possibles=candidats.filter(p=>p.nAcc===cible&&!vus.has(signatureLook(p))&&scorePreferenceLook(p,preferences)>-9999);
+  const possibles=candidats.filter(p=>p.nAcc===cible&&lookAdmissibleMD(p.groupe)&&!vus.has(signatureLook(p))&&scorePreferenceLook(p,preferences)>-9999);
   if(!possibles.length)continue;
   possibles.sort((a,b)=>{
    const penalite=p=>p.groupe.reduce((n,v)=>n+(utilisations.get(v.id)||0)*(accessoires.includes(v)?9:1),0);
@@ -1263,7 +1289,7 @@ function afficherPropositions(){
  }
  window.suggestionsActuelles=uniques;
  // La première proposition est sélectionnée dans l'ensemble des compositions disponibles.
- const choixMeteo=[...candidats].filter(p=>scorePreferenceLook(p,preferences)>-9999).sort((a,b)=>(scoreMeteoSaison(b.groupe)+b.score*.12+scoreCoherenceStyle(b.groupe)+scorePreferenceLook(b,preferences))-(scoreMeteoSaison(a.groupe)+a.score*.12+scoreCoherenceStyle(a.groupe)+scorePreferenceLook(a,preferences)))[0];
+ const choixMeteo=[...uniques].filter(p=>lookAdmissibleMD(p.groupe)&&scorePreferenceLook(p,preferences)>-9999).sort((a,b)=>(scoreMeteoSaison(b.groupe)+b.score*.12+scoreCoherenceStyle(b.groupe)+scorePreferenceLook(b,preferences))-(scoreMeteoSaison(a.groupe)+a.score*.12+scoreCoherenceStyle(a.groupe)+scorePreferenceLook(a,preferences)))[0];
  if(choixMeteo && !window.swipeEnCours){const sig=signatureLook(choixMeteo);const index=uniques.findIndex(p=>signatureLook(p)===sig);if(index>=0)uniques.splice(index,1);uniques.unshift(choixMeteo);}
  // Le premier look tient compte de la saison et, si autorisée, de la météo locale.
  
@@ -1433,7 +1459,7 @@ import { pipeline, env } from 'https://cdn.jsdelivr.net/npm/@huggingface/transfo
 env.allowLocalModels = false;
 let modelePromise;
 const options = [
- ['Haut','a photo of a shirt'],['Haut','a photo of a blouse'],['Haut','a photo of a sweater'],['Haut','a photo of a t-shirt'],
+ ['Chemise / blouse','a photo of a shirt'],['Chemise / blouse','a photo of a blouse'],['Pull','a photo of a sweater'],['T-shirt','a photo of a t-shirt'],
  ['Pantalon','a photo of trousers'],['Pantalon','a photo of jeans'],['Jupe','a photo of a skirt'],['Robe','a photo of a dress'],
  ['Veste / manteau','a photo of a blazer'],['Veste / manteau','a photo of a jacket'],['Veste / manteau','a photo of a coat'],
  ['Chaussures','a photo of shoes'],['Chaussures','a photo of sneakers'],['Chaussures','a photo of boots'],
@@ -1534,7 +1560,7 @@ window.analyserPhoto=async function(){
   <div class="md-depart-progress"><div id="mdProgressBarre"></div></div>
   <div class="md-depart-lignes"><span>✦ Pantalons <b id="mdProgressPantalons">0 / 2</b></span><span>✦ Pulls <b id="mdProgressPulls">0 / 2</b></span><span>✦ T-shirts <b id="mdProgressTshirts">0 / 2</b></span><span>✦ Vestes <b id="mdProgressVestes">0 / 2</b></span></div>
   <button type="button" onclick="document.getElementById('mdDemarrageSwipe').classList.add('hidden');page('vetements')">＋ Ajouter mes vêtements</button>
-  <small>Pour les pulls et T-shirts, choisissez « Haut » et indiquez « pull » ou « T-shirt » dans le nom. Pour les vestes, choisissez « Veste / manteau ».</small>
+  <small>Choisissez directement « Pull » ou « T-shirt » dans les catégories. Pour les vestes, choisissez « Veste / manteau ».</small>
  </div>
 </div>
 </body>
