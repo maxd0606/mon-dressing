@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mon Dressing</title>
+<style>
+:root {
+  --rose: #b76e8a;
+  --rose-clair: #f5e3e9;
+  --beige: #f4eee5;
+  --fond: #fcf8f5;
+  --texte: #40343a;
+  --blanc: #ffffff;
+  --bordure: #eadde0;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: var(--fond);
+  color: var(--texte);
+}
+header {
+  text-align: center;
+  padding: 42px 20px;
+  background: linear-gradient(135deg, #f5e0e8, #f5eee3);
+  border-bottom: 1px solid var(--bordure);
+}
+h1 {
+  margin: 0;
+  font-family: Georgia, serif;
+  font-size: clamp(32px, 5vw, 46px);
+  font-weight: normal;
+  letter-spacing: 1px;
+}
+header p {
+  margin: 12px 0 0;
+  color: #78646d;
+  font-size: 16px;
+}
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  padding: 18px;
+  background: var(--blanc);
+  border-bottom: 1px solid var(--bordure);
+}
+button {
+  background: var(--rose);
+  color: white;
+  border: 1px solid transparent;
+  border-radius: 30px;
+  padding: 12px 20px;
+  margin: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background .2s, transform .2s;
+}
+button:hover {
+  background: #99536f;
+  transform: translateY(-1px);
+}
+main {
+  width: min(100% - 32px, 1000px);
+  margin: 30px auto;
+}
+section {
+  background: var(--blanc);
+  border: 1px solid var(--bordure);
+  border-radius: 20px;
+  padding: clamp(18px, 4vw, 30px);
+  margin-bottom: 22px;
+  box-shadow: 0 8px 28px rgba(100, 65, 80, .05);
+}
+h2 {
+  font-family: Georgia, serif;
+  font-weight: normal;
+  font-size: 25px;
+  margin-top: 0;
+  color: #684653;
+}
+label {
+  display: block;
+  margin-top: 14px;
+  font-size: 14px;
+}
+input, select {
+  padding: 12px;
+  border: 1px solid #dfcbd3;
+  border-radius: 10px;
+  margin: 6px 0;
+  max-width: 100%;
+  background: #fffdfc;
+  color: var(--texte);
+}
+input:focus, select:focus {
+  outline: 2px solid #e9c4d2;
+  border-color: var(--rose);
+}
+.items {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 16px;
+}
+.item {
+  border: 1px solid var(--bordure);
+  border-radius: 16px;
+  padding: 12px;
+  overflow-wrap: anywhere;
+  background: #fffdfc;
+  box-shadow: 0 4px 12px rgba(80, 50, 60, .04);
+}
+.item img {
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+  border-radius: 11px;
+  background: var(--beige);
+}
+.item p {
+  font-size: 13px;
+  color: #786b70;
+  line-height: 1.5;
+}
+.hidden { display: none; }
+.note {
+  color: #81747a;
+  font-size: 13px;
+  line-height: 1.6;
+}
+@media (max-width: 600px) {
+  header { padding: 30px 14px; }
+  nav { gap: 4px; padding: 12px 6px; }
+  nav button { padding: 10px 12px; }
+  .items { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .item img { height: 145px; }
+}
+
+:root { --accent:#b76e8a; --accent-soft:#f5e3e9; }
+body.mode-homme { --rose:#43586a; --rose-clair:#e7edf0; --fond:#f6f7f6; --bordure:#dbe2e6; --accent:#43586a; --accent-soft:#e7edf0; }
+body.mode-homme header {background:linear-gradient(135deg,#e6edf0,#eee9df)}
+body.mode-homme h2 {color:#405363}
+.topbar {display:flex;justify-content:space-between;align-items:center;gap:12px;max-width:1050px;margin:auto}
+.topbar h1 {font-size:clamp(28px,5vw,40px)}
+.searchbar {width:min(100%,450px);margin:16px auto 0;display:block}
+.hero {background:linear-gradient(110deg,var(--rose-clair),var(--beige));border-radius:20px;padding:28px;margin-bottom:22px}
+.hero h2 {font-size:clamp(26px,4vw,38px);margin-bottom:8px}
+.chips {display:flex;flex-wrap:wrap;gap:7px;margin:12px 0 20px}
+.chips button {background:var(--rose-clair);color:var(--texte);border:1px solid var(--bordure);padding:9px 14px}
+.chips button.active {background:var(--rose);color:white}
+.actions {display:flex;flex-wrap:wrap;gap:8px}
+.ghost {background:white;color:var(--rose);border-color:var(--bordure)}
+.ghost:hover {color:white}
+.tag {font-size:12px;color:#786b70}
+.suggestions {display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.suggestion {border:1px solid var(--bordure);border-radius:16px;padding:14px;background:#fffdfc}
+.suggestion-photos {display:flex;gap:5px;margin:10px 0}
+.suggestion-photos img {width:32%;height:120px;object-fit:cover;border-radius:8px}
+.overlay {position:fixed;inset:0;background:rgba(32,28,32,.65);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
+.overlay.hidden {display:none}
+.welcome {width:min(100%,620px);background:var(--fond);border-radius:24px;padding:30px;text-align:center;box-shadow:0 20px 80px #0003}
+.choice-grid {display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:24px}
+.choice {background:white;border:2px solid var(--bordure);border-radius:18px;padding:28px 12px;color:var(--texte);font-size:20px}
+.choice:hover {border-color:var(--rose);color:white}
+@media(max-width:600px){.topbar{flex-direction:column}.suggestion-photos img{height:95px}}
+
+.suggestion {min-width:0;overflow:hidden}
+.suggestion-photos {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.suggestion-photos img {width:100%;height:105px;min-width:0;object-fit:contain;background:#f6f3f1}
+#alerteDoublon {padding:14px;margin:12px 0;border:1px solid #d7a9a3;border-radius:14px;background:#fff3ee;color:#6c3b36}
+#alerteDoublon img {width:72px;height:72px;object-fit:cover;border-radius:8px;vertical-align:middle;margin-right:10px}
+#alerteDoublon strong {display:block;margin-bottom:6px}
+</style>
+</head>
+<body>
+<div id="bienvenue" class="overlay hidden">
+ <div class="welcome">
+  <h1>Bienvenue dans Mon Dressing ✨</h1>
+  <p>Choisis ton univers pour personnaliser les couleurs et les inspirations de tenues.</p>
+  <div class="choice-grid">
+   <button class="choice" onclick="choisirUnivers('femme')">👗<br>Femme</button>
+   <button class="choice" onclick="choisirUnivers('homme')">👔<br>Homme</button>
+  </div>
+  <p class="note">Tu pourras changer ce choix à tout moment.</p>
+ </div>
+</div>
+<header>
+ <div class="topbar"><h1>Mon Dressing ✨</h1><button class="ghost" onclick="changerUnivers()">⚙ Changer d'univers</button></div>
+ <p>Ton dressing, ton style, tes plus belles tenues.</p>
+ <input class="searchbar" id="recherche" placeholder="🔎 Rechercher un vêtement..." oninput="afficher()" aria-label="Rechercher un vêtement">
+</header>
+<nav>
+<button onclick="page('accueil')">Accueil</button>
+<button onclick="page('vetements')">Mes vêtements</button>
+<button onclick="page('creation')">Composer une tenue</button>
+<button onclick="page('lookbook')">Mon lookbook</button>
+</nav>
+<main>
+<section id="accueil">
+ <div class="hero"><h2>Bienvenue dans ton dressing ♡</h2>
+ <p>Ajoute tes vêtements et découvre des idées de tenues harmonieuses, composées avec ce que tu possèdes.</p>
+ <div class="actions"><button onclick="page('vetements')">＋ Ajouter un vêtement</button><button class="ghost" onclick="document.getElementById('idees').scrollIntoView({behavior:'smooth'})">Voir mes idées de looks</button></div></div>
+ <h2>Découvrir mes vêtements</h2>
+ <div class="chips" id="filtres"></div>
+ <div id="galerie" class="items"></div>
+</section>
+<section id="vetements" class="hidden">
+<h2>Ajouter un vêtement</h2>
+<label>Nom du vêtement</label>
+<input id="nom" placeholder="Ex. chemise blanche">
+<label>Catégorie</label>
+<select id="categorie">
+<option>Haut</option><option>Pantalon</option><option>Jupe</option>
+<option>Robe</option><option>Veste / manteau</option>
+<option>Chaussures</option><option>Montre</option><option>Collier</option>
+<option>Bracelet</option><option>Bague</option><option>Chapeau / casquette</option>
+<option>Sac</option><option>Ceinture</option><option>Lunettes</option>
+<option>Écharpe / foulard</option><option>Accessoire</option><option>Autre</option>
+</select>
+<label>Couleur</label>
+<input id="couleur" placeholder="Ex. beige">
+<label>Photo du vêtement</label>
+<input id="photo" type="file" accept="image/*" onchange="photoSelectionnee()">
+<div id="nettoyageStatut" class="note" role="status">✨ La photo sera préparée sur un fond beige doux automatiquement.</div>
+<div id="nettoyageApercu" class="hidden" style="margin:12px 0"><img id="nettoyageImage" alt="Aperçu de la photo harmonisée" style="display:block;width:190px;max-width:100%;aspect-ratio:3/4;object-fit:contain;border-radius:14px;border:1px solid #e6d8cb;background:#f2e9dd"><p class="note">Aperçu de la photo qui sera enregistrée</p></div>
+<div id="alerteDoublon" class="hidden" role="status" aria-live="polite"></div>
+<label for="typeAnalyse">Que souhaites-tu analyser ?</label>
+<select id="typeAnalyse">
+<option value="auto">✨ Détection automatique (vêtement ou accessoire)</option>
+<option value="accessoire">💍 Accessoire (montre, collier, bague, sac…)</option>
+<option value="vetement">👗 Vêtement ou chaussures</option>
+</select>
+
+<p id="etatAnalyse" class="note" role="status">Dès que tu choisis une photo, son analyse et son nettoyage démarrent automatiquement. La première fois peut prendre plusieurs minutes.</p>
+<p><button onclick="ajouter()">Ajouter à mon dressing</button></p>
+<p class="note">Tu peux choisir « Accessoire » avant de sélectionner une photo de bijou, montre ou sac. L’IA propose une catégorie et une couleur : vérifie-les avant d’ajouter le vêtement. Les modèles de reconnaissance et de détourage se téléchargent via Internet ; le traitement s'effectue dans ton navigateur quand ils sont disponibles. Les données restent enregistrées dans ce navigateur.</p>
+<h2>Mes vêtements</h2>
+<div id="liste" class="items"></div>
+</section>
+<section id="creation" class="hidden">
+<h2>Composer une tenue</h2>
+<label>Nom de la tenue</label>
+<input id="nomTenue" placeholder="Ex. Tenue du dimanche">
+<p>Sélectionne les vêtements à associer :</p>
+<div id="selection" class="items"></div>
+<label>Note (facultatif)</label>
+<input id="noteTenue" placeholder="Ex. pour une sortie">
+<p><button onclick="enregistrerTenue()">Enregistrer ma tenue</button></p>
+</section>
+<section id="lookbook" class="hidden">
+<h2>Mon lookbook ❤️</h2>
+<div id="tenues" class="items"></div>
+</section>
+<section id="idees">
+<h2>✨ Mes propositions de tenues</h2>
+<p class="note">Suggestions automatiques avec vêtements, chaussures et accessoires facultatifs (0, 1 ou 2 de types différents). Elles utilisent uniquement les articles de ton dressing.</p>
+<div class="chips" id="stylesLooks">
+<button class="active" onclick="changerStyleLook('chic')">✨ Chic & élégant</button>
+<button onclick="changerStyleLook('casual')">🌿 Décontracté chic</button>
+<button onclick="changerStyleLook('soiree')">🌙 Soirée & habillé</button>
+</div>
+<p class="note">Inspirations de stylisme : luxe discret, silhouettes structurées, casual chic et palettes harmonieuses. Les idées sont créées avec tes vêtements, sans connexion en direct à des sites de mode.</p>
+<div id="propositions" class="suggestions"></div>
+</section>
+</main>
+<script>
+let vetements=JSON.parse(localStorage.getItem('mdVetements')||'[]');
+let tenues=JSON.parse(localStorage.getItem('mdTenues')||'[]');
+function sauver(){localStorage.setItem('mdVetements',JSON.stringify(vetements));localStorage.setItem('mdTenues',JSON.stringify(tenues))}
+function page(id){document.querySelectorAll('main section').forEach(s=>{if(s.id!=='idees')s.classList.add('hidden')});document.getElementById(id).classList.remove('hidden');document.getElementById('idees').classList.toggle('hidden',id!=='accueil');afficher();window.scrollTo(0,0)}
+function echapper(t){return String(t||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+// Empreinte visuelle : repère les images identiques ou très proches,
+// même si leur taille ou leur compression diffère.
+function empreinteImage(src){
+ return new Promise((resolve,reject)=>{
+  const img=new Image();
+  img.onload=()=>{
+   try{
+    const canvas=document.createElement('canvas');
+    canvas.width=9;canvas.height=8;
+    const ctx=canvas.getContext('2d',{willReadFrequently:true});
+    ctx.drawImage(img,0,0,9,8);
+    const pixels=ctx.getImageData(0,0,9,8).data;
+    const gris=[];
+    for(let i=0;i<pixels.length;i+=4)gris.push(pixels[i]*0.299+pixels[i+1]*0.587+pixels[i+2]*0.114);
+    let hash='';
+    for(let y=0;y<8;y++)for(let x=0;x<8;x++)hash+=gris[y*9+x]>gris[y*9+x+1]?'1':'0';
+    resolve(hash);
+   }catch(e){reject(e)}
+  };
+  img.onerror=reject;
+  img.src=src;
+ });
+}
+function distanceEmpreintes(a,b){
+ if(!a||!b||a.length!==b.length)return 64;
+ let n=0;for(let i=0;i<a.length;i++)if(a[i]!==b[i])n++;
+ return n;
+}
+async function chercherDoublon(f){
+ const image=await new Promise((resolve,reject)=>{
+  const lecteur=new FileReader();
+  lecteur.onload=()=>resolve(lecteur.result);
+  lecteur.onerror=reject;lecteur.readAsDataURL(f);
+ });
+ const empreinte=await empreinteImage(image);
+ let meilleur=null,score=65;
+ for(const v of vetements){
+  try{
+   const existante=await empreinteImage(v.photo);
+   const distance=distanceEmpreintes(empreinte,existante);
+   if(distance<score){score=distance;meilleur=v}
+  }catch(e){}
+ }
+ // Seuil prudent : une image très similaire, pas seulement le même type d'article.
+ return {meilleur:score<=5?meilleur:null,distance:score};
+}
+async function verifierDoublonPhoto(){
+ const f=document.getElementById('photo').files[0];
+ const alerte=document.getElementById('alerteDoublon');
+ alerte.classList.add('hidden');
+ alerte.innerHTML='';
+ if(!f)return;
+ try{
+  const resultat=await chercherDoublon(f);
+  if(document.getElementById('photo').files[0]!==f)return;
+  if(resultat.meilleur){
+   const v=resultat.meilleur;
+   alerte.innerHTML='<strong>⚠️ Doublon possible !</strong><img alt="Article déjà enregistré" src="'+v.photo+'">Cet article ressemble beaucoup à « '+echapper(v.nom)+' », déjà présent dans ton dressing. Tu pourras décider de l’ajouter quand même.';
+   alerte.classList.remove('hidden');
+  }
+ }catch(e){console.warn('Vérification des doublons indisponible',e)}
+}
+let photoNettoyee=null;
+let photoNettoyageFichier=null;
+let nettoyagePromesse=Promise.resolve();
+function preparerFondBeige(source){
+ return new Promise((resolve,reject)=>{
+  const image=new Image();
+  image.onload=()=>{
+   const canvas=document.createElement('canvas');
+   canvas.width=600;canvas.height=800;
+   const ctx=canvas.getContext('2d');
+   ctx.fillStyle='#f2e9dd';
+   ctx.fillRect(0,0,600,800);
+   const marge=54;
+   const ratio=Math.min((600-2*marge)/image.width,(800-2*marge)/image.height);
+   const w=image.width*ratio,h=image.height*ratio;
+   ctx.drawImage(image,(600-w)/2,(800-h)/2,w,h);
+   resolve(canvas.toDataURL('image/jpeg',0.78));
+  };
+  image.onerror=reject;
+  image.src=source;
+ });
+}
+async function nettoyerPhoto(fichier){
+ const statut=document.getElementById('nettoyageStatut');
+ const apercu=document.getElementById('nettoyageApercu');
+ photoNettoyee=null;
+ photoNettoyageFichier=null;
+ apercu.classList.add('hidden');
+ if(!fichier)return;
+ statut.textContent='✨ Nettoyage de la photo en cours…';
+ try{
+  // La suppression du fond est facultative : si le module ne peut pas
+  // être chargé, le cadrage et le fond beige restent disponibles.
+  const module=await import('https://esm.sh/@imgly/background-removal@1.7.0');
+  const sansFond=await module.removeBackground(fichier,{
+   progress:(cle,actuel,total)=>{
+    if(document.getElementById('photo').files[0]===fichier && total)
+     statut.textContent='✨ Préparation du détourage : '+Math.round(actuel/total*100)+' %';
+   }
+  });
+  const url=URL.createObjectURL(sansFond);
+  try{
+   const resultat=await preparerFondBeige(url);
+   if(document.getElementById('photo').files[0]!==fichier)return;
+   photoNettoyee=resultat;photoNettoyageFichier=fichier;
+   statut.textContent='✨ Photo nettoyée : vêtement centré sur fond beige doux.';
+  }finally{URL.revokeObjectURL(url)}
+ }catch(err){
+  console.warn('Détourage indisponible : cadrage harmonisé uniquement',err);
+  const original=await new Promise((resolve,reject)=>{
+   const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(fichier);
+  });
+  const resultat=await preparerFondBeige(original);
+  if(document.getElementById('photo').files[0]!==fichier)return;
+  photoNettoyee=resultat;photoNettoyageFichier=fichier;
+  statut.textContent='Photo centrée sur fond beige. Le détourage automatique n’a pas fonctionné : le fond d’origine peut rester visible. Vérifie ta connexion.';
+ }
+ if(document.getElementById('photo').files[0]===fichier && photoNettoyee){
+  document.getElementById('nettoyageImage').src=photoNettoyee;
+  apercu.classList.remove('hidden');
+ }
+}
+function lancerNettoyagePhoto(){
+ const fichier=document.getElementById('photo').files[0];
+ nettoyagePromesse=nettoyerPhoto(fichier).catch(e=>{
+  console.warn(e);
+  document.getElementById('nettoyageStatut').textContent='Nettoyage indisponible. La photo d’origine sera conservée.';
+ });
+}
+async function ajouter(){
+ const nom=document.getElementById('nom').value.trim(),f=document.getElementById('photo').files[0];
+ if(!nom||!f){alert('Indique un nom et choisis une photo.');return}
+
+ try{
+  const resultat=await chercherDoublon(f);
+  if(resultat.meilleur){
+   if(!confirm('⚠️ Doublon possible : cette photo ressemble beaucoup à « '+resultat.meilleur.nom+' » déjà dans ton dressing.\\n\\nAjouter quand même ?'))return;
+  }
+ }catch(e){console.warn('Vérification des doublons indisponible',e)}
+ await nettoyagePromesse;
+ if(document.getElementById('photo').files[0]!==f){alert('La photo a changé. Réessaie.');return}
+ const photoAEnregistrer=photoNettoyageFichier===f?photoNettoyee:await new Promise((resolve,reject)=>{
+  const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(f);
+ });
+ {
+  vetements.push({id:Date.now().toString(),nom,categorie:document.getElementById('categorie').value,couleur:document.getElementById('couleur').value,photo:photoAEnregistrer});
+  try{sauver()}catch(e){vetements.pop();alert('Le stockage est plein. Choisis une photo plus petite.');return}
+  document.getElementById('nom').value='';
+  document.getElementById('couleur').value='';
+  document.getElementById('photo').value='';
+  document.getElementById('alerteDoublon').classList.add('hidden');
+  document.getElementById('nettoyageApercu').classList.add('hidden');
+  document.getElementById('nettoyageStatut').textContent='✨ La prochaine photo sera préparée sur un fond beige doux.';
+  photoNettoyee=null;photoNettoyageFichier=null;
+  afficher();
+ }
+}
+
+function supprimer(id){if(confirm('Supprimer ce vêtement ?')){vetements=vetements.filter(v=>v.id!==id);sauver();afficher()}}
+function afficher(){
+document.getElementById('liste').innerHTML=vetements.length?vetements.map(v=>`<div class="item"><img src="${v.photo}" alt=""><b>${echapper(v.nom)}</b><p>${echapper(v.categorie)} · ${echapper(v.couleur)}</p><button onclick="supprimer('${v.id}')">Supprimer</button></div>`).join(''):'<p>Ton dressing est vide. Ajoute ton premier vêtement !</p>';
+document.getElementById('selection').innerHTML=vetements.map(v=>`<label class="item"><input type="checkbox" value="${v.id}">${echapper(v.nom)} (${echapper(v.categorie)})</label>`).join('')||'<p>Ajoute d’abord des vêtements.</p>';
+document.getElementById('tenues').innerHTML=tenues.length?tenues.map(t=>`<div class="item"><b>${echapper(t.nom)}</b><p>${t.noms.map(echapper).join(', ')}</p><p>${echapper(t.note)}</p><button onclick="supprimerTenue('${t.id}')">Supprimer</button></div>`).join(''):'<p>Tu n’as pas encore enregistré de tenue.</p>';
+afficherAccueil();afficherPropositions();
+}
+function enregistrerTenue(){
+let nom=document.getElementById('nomTenue').value.trim();
+let ids=[...document.querySelectorAll('#selection input:checked')].map(x=>x.value);
+if(!nom||!ids.length){alert('Donne un nom à la tenue et sélectionne au moins un vêtement.');return}
+tenues.push({id:Date.now().toString(),nom,noms:vetements.filter(v=>ids.includes(v.id)).map(v=>v.nom),note:document.getElementById('noteTenue').value});
+sauver();document.getElementById('nomTenue').value='';document.getElementById('noteTenue').value='';afficher();alert('Ta tenue est enregistrée !')
+}
+function supprimerTenue(id){if(confirm('Supprimer cette tenue ?')){tenues=tenues.filter(t=>t.id!==id);sauver();afficher()}}
+
+let univers=localStorage.getItem('mdUnivers')||'';
+let filtre='Tout';
+let styleLook='chic';
+function choisirUnivers(u){
+ univers=u;localStorage.setItem('mdUnivers',u);
+ document.body.classList.toggle('mode-homme',u==='homme');
+ document.getElementById('bienvenue').classList.add('hidden');
+ afficher();
+}
+function changerUnivers(){document.getElementById('bienvenue').classList.remove('hidden')}
+function afficherAccueil(){
+ const recherche=(document.getElementById('recherche').value||'').toLowerCase();
+ const categories=['Tout',...new Set(vetements.map(v=>v.categorie))];
+ document.getElementById('filtres').innerHTML=categories.map(c=>`<button class="${c===filtre?'active':''}" onclick="filtrer(${JSON.stringify(c).replace(/"/g,'&quot;')})">${echapper(c)}</button>`).join('');
+ const visibles=vetements.filter(v=>(filtre==='Tout'||v.categorie===filtre)&&[v.nom,v.categorie,v.couleur].join(' ').toLowerCase().includes(recherche));
+ document.getElementById('galerie').innerHTML=visibles.map(v=>`<div class="item"><img src="${v.photo}" alt=""><b>${echapper(v.nom)}</b><p>${echapper(v.categorie)} · ${echapper(v.couleur)}</p></div>`).join('')||'<p>Aucun vêtement à afficher. Ajoute tes premières photos !</p>';
+}
+function filtrer(c){filtre=c;afficherAccueil()}
+function couleurFamille(s){
+ s=(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+ if(/blanc|ecru|ivoire|creme/.test(s))return 'clair';
+ if(/noir|gris|anthracite/.test(s))return 'neutre';
+ if(/beige|camel|marron|taupe/.test(s))return 'terre';
+ if(/bleu|marine|jean/.test(s))return 'bleu';
+ if(/rose|rouge|bordeaux/.test(s))return 'rose';
+ return 'autre';
+}
+function scoreCouleurs(groupe){
+ const familles=groupe.map(v=>couleurFamille(v.couleur));
+ let score=0;
+ for(let i=0;i<familles.length;i++)for(let j=i+1;j<familles.length;j++){
+ const a=familles[i],b=familles[j];
+ if(a===b)score+=2;
+ else if(['clair','neutre','terre'].includes(a)||['clair','neutre','terre'].includes(b))score+=2;
+ else if((a==='bleu'&&b==='rose')||(a==='rose'&&b==='bleu'))score+=1;
+ }
+ return score;
+}
+function changerStyleLook(style){
+ styleLook=style;
+ document.querySelectorAll('#stylesLooks button').forEach((b,i)=>b.classList.toggle('active',['chic','casual','soiree'][i]===style));
+ afficherPropositions();
+}
+function scoreStyle(groupe){
+ const texte=groupe.map(v=>`${v.nom} ${v.categorie} ${v.couleur}`.toLowerCase()).join(' ');
+ const tests={
+ chic:[/chemise|blouse|chemisier|blazer|veste|tailleur|pantalon|robe/,/beige|blanc|noir|marine|camel|écru|ecru|gris/],
+ casual:[/jean|t-shirt|tee-shirt|pull|basket|sneaker|gilet|cardigan/,/beige|blanc|bleu|gris|kaki|denim/],
+ soiree:[/robe|blazer|veste|talon|escarpin|jupe|chemise|costume|mocassin/,/noir|bordeaux|marine|doré|dore|argent|blanc/]
+ };
+ return tests[styleLook].reduce((n,re)=>n+(re.test(texte)?3:0),0);
+}
+// Inspirations éditoriales : règles de stylisme générales (pas de récupération
+// en direct ni de copie de looks de sites tiers).
+function analyseMode(groupe){
+ const normal=t=>(t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+ const noms=groupe.map(v=>normal(v.nom+' '+v.categorie));
+ const tous=noms.join(' ');
+ const contient=re=>re.test(tous);
+ const parCategorie=c=>groupe.find(v=>v.categorie===c);
+ const neutres=groupe.filter(v=>['clair','neutre','terre'].includes(couleurFamille(v.couleur))).length;
+ const couleurs=new Set(groupe.map(v=>couleurFamille(v.couleur)).filter(c=>c!=='autre'));
+ const points=[];let bonus=0;let titre='Équilibre moderne';
+ const blazer=contient(/blazer|tailleur|veste de costume/);
+ const jean=contient(/jean|denim/);
+ const baskets=contient(/basket|sneaker|tennis/);
+ const maille=contient(/pull|maille|cardigan|gilet/);
+ const chemise=contient(/chemise|chemisier|blouse/);
+ const robe=!!parCategorie('Robe');
+ const elegant=contient(/mocassin|derby|richelieu|escarpin|talon|bottine|botte/);
+ const sac=contient(/sac|pochette/);
+ const bijou=contient(/collier|bague|bracelet|montre/);
+ if(styleLook==='chic'){
+  if(blazer&&(jean||baskets)){bonus+=9;titre='Luxe discret & quotidien';points.push('Une pièce structurée avec une touche décontractée : le contraste chic moderne.');}
+  else if(blazer||chemise){bonus+=6;titre='Élégance intemporelle';points.push('Une pièce bien coupée donne de la structure à la silhouette.');}
+  if(elegant){bonus+=4;points.push('Les chaussures apportent une finition soignée.');}
+  if(robe){bonus+=5;titre='Minimalisme élégant';}
+ }else if(styleLook==='casual'){
+  if(jean&&(blazer||chemise)){bonus+=10;titre='Casual chic éditorial';points.push('Le denim est rehaussé par une pièce plus habillée.');}
+  else if(jean&&maille){bonus+=7;titre='Décontracté raffiné';points.push('Jean et maille créent une base facile à porter.');}
+  else if(baskets&&(blazer||chemise)){bonus+=7;titre='Sport chic';points.push('Les baskets assouplissent une silhouette structurée.');}
+  if(baskets){bonus+=3;points.push('Une chaussure confortable garde le look quotidien.');}
+ }else{
+  if(robe){bonus+=9;titre='Soirée minimaliste';points.push('La robe devient la pièce centrale du look.');}
+  if((blazer||chemise)&&elegant){bonus+=9;titre='Tailoring de soirée';points.push('Les pièces structurées et les chaussures habillées créent une allure élégante.');}
+  if(bijou){bonus+=3;points.push('Un bijou apporte une touche lumineuse sans surcharger.');}
+  if(baskets){bonus-=6;}
+ }
+ if(neutres>=Math.max(2,groupe.length-1)){bonus+=5;points.push('Une palette neutre évoque le luxe discret.');}
+ if(couleurs.size<=3){bonus+=4;points.push('Une palette limitée rend la composition plus harmonieuse.');}
+ else if(couleurs.size>=5){bonus-=7;}
+ if(sac&&groupe.length<=5){bonus+=2;}
+ if(!points.length)points.push('Une association simple, basée sur les pièces de ton dressing.');
+ return {bonus,titre,explication:points.slice(0,2).join(' ')};
+}
+function scoreEditorial(groupe){return scoreCouleurs(groupe)+scoreStyle(groupe)+analyseMode(groupe).bonus;}
+function nomStyle(){
+ return {chic:'Chic & élégant',casual:'Décontracté chic',soiree:'Soirée & habillé'}[styleLook];
+}
+function afficherPropositions(){
+ const hauts=vetements.filter(v=>v.categorie==='Haut'||v.categorie==='Robe');
+ const bas=vetements.filter(v=>['Pantalon','Jupe'].includes(v.categorie));
+ const chaussures=vetements.filter(v=>v.categorie==='Chaussures');
+ const vestes=vetements.filter(v=>v.categorie==='Veste / manteau');
+ const accessoires=vetements.filter(v=>['Montre','Collier','Bracelet','Bague','Chapeau / casquette','Sac','Ceinture','Lunettes','Écharpe / foulard','Accessoire'].includes(v.categorie));
+ let propositions=[];
+ for(const h of hauts){
+  const bases=h.categorie==='Robe'?[[]]:bas.map(b=>[b]);
+  for(const base of bases){
+   for(const ch of (chaussures.length?chaussures:[null])){
+    const groupe=[h,...base,...(ch?[ch]:[])];
+    if(groupe.length>=2)propositions.push({groupe,score:scoreCouleurs(groupe)});
+    for(const veste of vestes){propositions.push({groupe:[...groupe,veste],score:scoreCouleurs([...groupe,veste])})}
+   }
+  }
+ }
+ // Les accessoires sont FACULTATIFS : looks sans accessoire, avec un ou deux.
+ // Regrouper par type réel (nom + catégorie), même si une ancienne photo a
+ // été classée sous la catégorie générique « Accessoire ».
+ function typeAccessoire(v){
+  const txt=(v.nom+' '+v.categorie).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  const types=[
+   ['bague',/\bbague\b|\bring\b/],
+   ['montre',/\bmontre\b|\bwatch\b/],
+   ['bracelet',/\bbracelet\b/],
+   ['collier',/\bcollier\b|\bpendentif\b/],
+   ['chapeau',/\bchapeau\b|\bcasquette\b|\bbonnet\b/],
+   ['sac',/\bsac\b|\bpochette\b/],
+   ['ceinture',/\bceinture\b/],
+   ['lunettes',/\blunettes\b/],
+   ['foulard',/\becharpe\b|\bfoulard\b/]
+  ];
+  return (types.find(([nom,re])=>re.test(txt))||['autre'])[0];
+ }
+ const candidats=[];
+ for(const p of propositions){
+  // Un look sans accessoires est toujours possible.
+  candidats.push({groupe:p.groupe,score:scoreEditorial(p.groupe),nAcc:0});
+  const classes=new Map();
+  for(const a of accessoires){
+   const type=typeAccessoire(a);
+   if(!classes.has(type))classes.set(type,[]);
+   classes.get(type).push(a);
+  }
+  // Un article de chaque type pour éviter deux bagues / deux montres.
+  const distincts=[...classes.values()].map(arr=>arr.sort((a,b)=>
+   scoreCouleurs([...p.groupe,b])-scoreCouleurs([...p.groupe,a]))[0]);
+  distincts.sort((a,b)=>
+   (scoreEditorial([...p.groupe,b]))-
+   (scoreEditorial([...p.groupe,a])));
+  for(const a of distincts.slice(0,7)){
+   const g=[...p.groupe,a];
+   candidats.push({groupe:g,score:scoreEditorial(g),nAcc:1});
+  }
+  for(let i=0;i<Math.min(distincts.length,6);i++){
+   for(let j=i+1;j<Math.min(distincts.length,6);j++){
+    const g=[...p.groupe,distincts[i],distincts[j]];
+    candidats.push({groupe:g,score:scoreEditorial(g),nAcc:2});
+   }
+  }
+ }
+ // Diversité : ne pas présenter six fois les mêmes bijoux.
+ const uniques=[];const vus=new Set();const utilisations=new Map();
+ const quotas=[0,1,2,1,0,2];
+ for(let position=0;position<6;position++){
+  const cible=quotas[position];
+  const possibles=candidats.filter(p=>p.nAcc===cible&&!vus.has(p.groupe.map(v=>v.id).sort().join('|')));
+  if(!possibles.length)continue;
+  possibles.sort((a,b)=>{
+   const penalite=p=>p.groupe.reduce((n,v)=>n+(utilisations.get(v.id)||0)*(accessoires.includes(v)?9:1),0);
+   return (b.score-penalite(b))-(a.score-penalite(a));
+  });
+  const choisi=possibles[0];
+  const cle=choisi.groupe.map(v=>v.id).sort().join('|');
+  vus.add(cle);uniques.push(choisi);
+  choisi.groupe.forEach(v=>utilisations.set(v.id,(utilisations.get(v.id)||0)+1));
+ }
+ document.getElementById('propositions').innerHTML=uniques.map((p,i)=>`<div class="suggestion"><b>Look ${i+1} · ${echapper(analyseMode(p.groupe).titre)}</b><div class="suggestion-photos">${p.groupe.map(v=>`<img src="${v.photo}" alt="${echapper(v.nom)}" title="${echapper(v.nom)}">`).join('')}</div><p>${p.groupe.map(v=>echapper(v.nom)).join(' + ')}</p><p class="note">✨ ${echapper(analyseMode(p.groupe).explication)}</p><p class="note">${p.nAcc===0?'Sans accessoire':p.nAcc===1?'Avec 1 accessoire':'Avec 2 accessoires différents'}</p><button onclick="sauverSuggestion(${i})">♡ Garder ce look</button></div>`).join('')||'<p>Ajoute au moins un haut et un pantalon ou une jupe, ou une robe et des chaussures, pour recevoir tes premières idées.</p>';
+ window.suggestionsActuelles=uniques;
+}
+function sauverSuggestion(i){
+ const p=(window.suggestionsActuelles||[])[i];if(!p)return;
+ const nom=nomStyle()+' '+(tenues.length+1);
+ tenues.push({id:Date.now().toString(),nom,noms:p.groupe.map(v=>v.nom),note:'Inspiration mode · '+nomStyle()+' · '+analyseMode(p.groupe).explication});
+ try{sauver()}catch(e){tenues.pop();alert('Stockage plein.');return}
+ afficher();alert('Tenue enregistrée dans ton lookbook !');
+}
+document.body.classList.toggle('mode-homme',univers==='homme');
+if(!univers)document.getElementById('bienvenue').classList.remove('hidden');
+page('accueil');
+
+</script>
+
+<script type="module">
+import { pipeline, env } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1';
+env.allowLocalModels = false;
+let modelePromise;
+const options = [
+ ['Haut','a photo of a shirt'],['Haut','a photo of a blouse'],['Haut','a photo of a sweater'],['Haut','a photo of a t-shirt'],
+ ['Pantalon','a photo of trousers'],['Pantalon','a photo of jeans'],['Jupe','a photo of a skirt'],['Robe','a photo of a dress'],
+ ['Veste / manteau','a photo of a blazer'],['Veste / manteau','a photo of a jacket'],['Veste / manteau','a photo of a coat'],
+ ['Chaussures','a photo of shoes'],['Chaussures','a photo of sneakers'],['Chaussures','a photo of boots'],
+ ['Sac','a photo of a handbag'],['Écharpe / foulard','a photo of a scarf'],['Écharpe / foulard','a photo of a silk scarf'],['Chapeau / casquette','a photo of a hat'],
+ ['Montre','a photo of a wristwatch'],['Montre','a photo of a watch'],['Collier','a photo of a necklace'],['Collier','a photo of a pendant necklace'],
+ ['Bracelet','a photo of a bracelet'],['Bracelet','a photo of a bangle'],['Bague','a photo of a ring'],['Bague','a photo of a finger ring'],['Bague','a photo of a gold ring'],
+ ['Ceinture','a photo of a belt'],['Lunettes','a photo of sunglasses'],
+ ['Chapeau / casquette','a photo of a baseball cap'],['Chapeau / casquette','a photo of a cap']
+];
+const couleurs = [
+ ['noir','black'],['blanc','white'],['beige','beige'],['gris','gray'],['bleu','blue'],
+ ['bleu marine','navy blue'],['rouge','red'],['rose','pink'],['vert','green'],
+ ['marron','brown'],['camel','tan'],['jaune','yellow'],['doré','gold'],['argenté','silver'],['violet','purple'],['orange','orange']
+];
+function chargerImage(f){
+ return new Promise((resolve,reject)=>{
+  const r=new FileReader();
+  r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(f);
+ });
+}
+function reduireImage(src){
+ return new Promise((resolve,reject)=>{
+  const im=new Image();
+  im.onload=()=>{
+   const can=document.createElement('canvas');
+   const k=Math.min(1,640/Math.max(im.width,im.height));
+   can.width=Math.round(im.width*k);can.height=Math.round(im.height*k);
+   can.getContext('2d').drawImage(im,0,0,can.width,can.height);
+   resolve(can.toDataURL('image/jpeg',0.86));
+  };
+  im.onerror=reject;im.src=src;
+ });
+}
+let analyseEnCours=false;
+let photoEnAttente=false;
+window.photoSelectionnee=function(){
+ verifierDoublonPhoto();
+ lancerNettoyagePhoto();
+ const f=document.getElementById('photo').files[0];
+ if(!f)return;
+ if(analyseEnCours){photoEnAttente=true;return}
+ window.analyserPhoto();
+};
+window.analyserPhoto=async function(){
+ if(analyseEnCours){photoEnAttente=true;return}
+ analyseEnCours=true;
+ const fichierAuDepart=document.getElementById('photo').files[0];
+ const fichier=document.getElementById('photo').files[0];
+ const etat=document.getElementById('etatAnalyse');
+
+ if(!fichier){etat.textContent='Choisis d’abord une photo.';return}
+
+ try{
+  etat.textContent='Chargement de l’intelligence artificielle… La première fois peut prendre plusieurs minutes (téléchargement volumineux).';
+  if(!modelePromise)modelePromise=pipeline('zero-shot-image-classification','Xenova/clip-vit-base-patch32',{device:'wasm'});
+  const modele=await modelePromise;
+  etat.textContent='Analyse du vêtement et de sa couleur en cours…';
+  const image=await reduireImage(await chargerImage(fichier));
+  const typeChoisi=document.getElementById('typeAnalyse').value;
+  const categoriesAccessoires=['Montre','Collier','Bracelet','Bague','Chapeau / casquette','Sac','Ceinture','Lunettes','Écharpe / foulard','Accessoire'];
+  const optionsFiltrees=typeChoisi==='auto'?options:options.filter(x=>typeChoisi==='accessoire'?categoriesAccessoires.includes(x[0]):!categoriesAccessoires.includes(x[0]));
+  const types=await modele(image,optionsFiltrees.map(x=>x[1]));
+  const colors=await modele(image,couleurs.map(x=>'a photo of '+x[1]+' clothing'));
+  const topType=optionsFiltrees.find(x=>x[1]===types[0].label);
+  const topScore=types[0]?.score??0;
+  const colorName=colors[0].label.replace(/^a photo of /,'').replace(/ clothing$/,'');
+  const topColor=couleurs.find(x=>x[1]===colorName);
+  if(document.getElementById('photo').files[0]!==fichierAuDepart)return;
+  if(topType)document.getElementById('categorie').value=topType[0];
+  if(topColor)document.getElementById('couleur').value=topColor[0];
+  const ancienNom=document.getElementById('nom').value.trim();
+  // Remplacer aussi les anciens noms automatiques génériques,
+  // mais ne jamais écraser un nom personnalisé par l'utilisateur.
+  const nomGenerique=/^(accessoire|vêtement|vetement)(\s+.*)?$/i.test(ancienNom);
+  if(!ancienNom||nomGenerique){
+   document.getElementById('nom').value=(topType?topType[0]:'Vêtement')+' '+(topColor?topColor[0]:'');
+  }
+  etat.textContent='✨ Analyse terminée : '+(topType?topType[0]:'catégorie inconnue')+' ('+Math.round(topScore*100)+' % de score relatif). Vérifie et corrige si besoin, puis clique sur « Ajouter à mon dressing ».';
+ }catch(err){
+  console.error(err);
+  modelePromise=null;
+  etat.textContent='Impossible de charger ou utiliser l’IA. Vérifie ta connexion Internet. Si Chrome bloque le fichier local, il faudra ouvrir le site via un serveur local. Tu peux toujours remplir les champs manuellement.';
+ }finally{
+  analyseEnCours=false;
+  const fichierActuel=document.getElementById('photo').files[0];
+  if(photoEnAttente && fichierActuel && fichierActuel!==fichierAuDepart){
+   photoEnAttente=false;
+   window.analyserPhoto();
+  }else{photoEnAttente=false}
+ }
+};
+</script>
+</body>
+</html>
