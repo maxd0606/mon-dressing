@@ -773,6 +773,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
  <button onclick="mdAller('vetements')">Ajouter un vêtement <span>›</span></button>
  <button onclick="mdAller('creation')">Composer <span>›</span></button>
  <button onclick="mdAller('lookbook')">Lookbook <span>›</span></button>
+ <button onclick="mdOuvrirProfil()">Mon profil & sauvegarde <span>›</span></button>
  <button class="md-menu-return" onclick="mdRetourSwipe()">♥ Retour aux looks</button>
 </div>
 <main>
@@ -2073,6 +2074,97 @@ function mdChoisirUniversAnime(universChoisi,bouton){
  };
  window.mdFermerConseilPhoto=function(){document.getElementById('mdPremierConseilPhoto').hidden=true;};
 })();
+</script>
+
+<style>
+#mdProfil{position:fixed;inset:0;z-index:1000000;background:#0c0b0deb;display:none;align-items:center;justify-content:center;padding:15px;overflow-y:auto}
+#mdProfil.ouvert{display:flex}
+.md-profil-carte{background:linear-gradient(155deg,#302720,#151313);border:1px solid #c3a16d;border-radius:23px;padding:23px;width:min(100%,460px);max-height:94dvh;overflow-y:auto;color:#f3e5ce;box-shadow:0 20px 70px #000a}
+.md-profil-carte h2{text-align:center;color:#ebd0a0;font:normal 30px Georgia,serif;margin:12px 0}
+.md-profil-carte p{font-size:13px;line-height:1.55;color:#d4c3a8}
+.md-profil-carte input{display:block;width:100%;padding:13px;margin:9px 0;color:#241c17!important;background:#fff9ee!important}
+.md-profil-carte button{border-radius:12px!important;padding:12px 14px!important;margin:5px 0!important;width:100%;font-size:13px!important}
+.md-profil-carte .md-p-second{background:transparent!important;color:#ecd4a8!important;border:1px solid #9d815c!important}
+#mdProfilEtat{white-space:pre-wrap;font-size:12px;line-height:1.5;color:#efd1a0;min-height:22px}
+</style>
+<div id="mdProfil" role="dialog" aria-modal="true" aria-label="Mon profil et sauvegarde">
+ <div class="md-profil-carte">
+  <button type="button" class="md-p-second" onclick="mdFermerProfil()">← Retour</button>
+  <h2>✦ Mon Profil</h2>
+  <p>Ton dressing reste sur cet appareil. Connecte-toi pour créer une copie sécurisée en ligne et la retrouver sur un autre téléphone.</p>
+  <div id="mdProfilConnexion">
+   <input id="mdProfilEmail" type="email" autocomplete="email" placeholder="Adresse e-mail" aria-label="Adresse e-mail">
+   <input id="mdProfilMdp" type="password" autocomplete="current-password" placeholder="Mot de passe (6 caractères minimum)" aria-label="Mot de passe">
+   <button onclick="mdCreerCompte()">Créer mon compte</button>
+   <button class="md-p-second" onclick="mdSeConnecter()">J'ai déjà un compte · Se connecter</button>
+   <button class="md-p-second" onclick="mdReinitialiserMdp()">Mot de passe oublié ?</button>
+  </div>
+  <div id="mdProfilConnecte" hidden>
+   <p id="mdProfilIdentite"></p>
+   <p>Choisis d'abord ton univers Homme ou Femme. La sauvegarde est volontaire : aucune donnée n'est remplacée automatiquement.</p>
+   <button id="mdBtnEnvoyer" onclick="mdSauvegardeCloud()">☁ Sauvegarder mon dressing en ligne</button>
+   <button class="md-p-second" onclick="mdRestaurerCloud()">↓ Récupérer mon dressing depuis le cloud</button>
+   <button class="md-p-second" onclick="mdSeDeconnecter()">Se déconnecter</button>
+  </div>
+  <p id="mdProfilEtat" role="status" aria-live="polite"></p>
+  <p style="font-size:11px">Les photos sont réduites avant sauvegarde. Limites gratuites Firebase et taille maximale par document applicables. Garde une copie de tes photos originales.</p>
+ </div>
+</div>
+<script type="module">
+import {initializeApp} from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js';
+import {getAuth,onAuthStateChanged,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,sendPasswordResetEmail} from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js';
+import {getFirestore,doc,setDoc,getDoc,collection,getDocs,writeBatch} from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js';
+const config={apiKey:'AIzaSyAI4Nn_vL3uwcUJ8RviKqaxoH1nOdMu-X4',authDomain:'mon-dressing-537da.firebaseapp.com',projectId:'mon-dressing-537da',storageBucket:'mon-dressing-537da.firebasestorage.app',messagingSenderId:'968352731982',appId:'1:968352731982:web:46deec2f12a0998deb441f'};
+const app=initializeApp(config),auth=getAuth(app),db=getFirestore(app);
+const $=id=>document.getElementById(id);
+const etat=t=>{$('mdProfilEtat').textContent=t};
+const err=e=>({ 'auth/email-already-in-use':'Cette adresse possède déjà un compte.', 'auth/invalid-email':'Adresse e-mail incorrecte.', 'auth/invalid-credential':'E-mail ou mot de passe incorrect.', 'auth/weak-password':'Choisis au moins 6 caractères.', 'permission-denied':'Accès refusé : vérifie les règles Firebase.'}[e.code]||e.message||'Une erreur est survenue.');
+window.mdOuvrirProfil=()=>{$('mdMenu').classList.add('hidden');$('mdProfil').classList.add('ouvert');etat('')};
+window.mdFermerProfil=()=>{$('mdProfil').classList.remove('ouvert')};
+onAuthStateChanged(auth,u=>{$('mdProfilConnexion').hidden=!!u;$('mdProfilConnecte').hidden=!u;$('mdProfilIdentite').textContent=u?'Connecté : '+u.email:''});
+const identifiants=()=>[$('mdProfilEmail').value.trim(),$('mdProfilMdp').value];
+window.mdCreerCompte=async()=>{try{const [e,p]=identifiants();await createUserWithEmailAndPassword(auth,e,p);etat('Compte créé. Tu peux maintenant sauvegarder ton dressing.')}catch(e){etat(err(e))}};
+window.mdSeConnecter=async()=>{try{const [e,p]=identifiants();await signInWithEmailAndPassword(auth,e,p);etat('Connexion réussie.')}catch(e){etat(err(e))}};
+window.mdSeDeconnecter=async()=>{await signOut(auth);etat('Déconnecté. Tes données locales sont conservées.')};
+window.mdReinitialiserMdp=async()=>{try{const e=$('mdProfilEmail').value.trim();if(!e)throw Error('Entre ton e-mail d’abord.');await sendPasswordResetEmail(auth,e);etat('Si ce compte existe, un e-mail de réinitialisation a été envoyé.')}catch(e){etat(err(e))}};
+const espace=()=>{if(!auth.currentUser)throw Error('Connecte-toi d’abord.');if(!['homme','femme'].includes(univers))throw Error('Choisis d’abord l’univers Homme ou Femme.');return doc(db,'users',auth.currentUser.uid,'univers',univers)};
+async function compresser(photo){
+ if(typeof photo!=='string'||!photo.startsWith('data:image/'))return photo;
+ const img=new Image();img.src=photo;await img.decode();
+ const c=document.createElement('canvas'),ratio=Math.min(1,650/Math.max(img.naturalWidth,img.naturalHeight));
+ c.width=Math.max(1,Math.round(img.naturalWidth*ratio));c.height=Math.max(1,Math.round(img.naturalHeight*ratio));c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+ let q=.72,result=c.toDataURL('image/jpeg',q);
+ while(result.length>650000&&q>.25){q-=.12;result=c.toDataURL('image/jpeg',q)}
+ if(result.length>650000)throw Error('Une photo reste trop volumineuse. Réduis-la avant la sauvegarde.');
+ return result;
+}
+window.mdSauvegardeCloud=async()=>{
+ const bouton=$('mdBtnEnvoyer');bouton.disabled=true;
+ try{
+  const base=espace();if(!confirm('Sauvegarder une copie de tes '+vetements.length+' vêtements et '+tenues.length+' tenues ('+univers+') ? Les données déjà présentes dans le cloud avec le même identifiant seront mises à jour.'))return;
+  etat('Préparation des photos…');
+  const items=[];for(let i=0;i<vetements.length;i++){const v=vetements[i];etat('Préparation '+(i+1)+' / '+vetements.length);items.push({...v,photo:await compresser(v.photo)})}
+  etat('Envoi des données…');
+  // Une écriture par vêtement pour rester sous la limite de 1 Mio/document.
+  for(let i=0;i<items.length;i++){const v=items[i];await setDoc(doc(collection(base,'vetements'),String(v.id)),v);etat('Vêtements envoyés : '+(i+1)+' / '+items.length)}
+  for(const t of tenues)await setDoc(doc(collection(base,'tenues'),String(t.id)),t);
+  await setDoc(base,{univers,maj:new Date().toISOString(),nombreVetements:items.length,nombreTenues:tenues.length});
+  etat('✓ Sauvegarde terminée : '+items.length+' vêtements et '+tenues.length+' tenues. Les originaux restent sur cet appareil.');
+ }catch(e){etat('Sauvegarde incomplète : '+err(e)+' Réessaie avant de changer de téléphone.')}finally{bouton.disabled=false}
+};
+window.mdRestaurerCloud=async()=>{
+ try{
+  const base=espace();etat('Recherche de la sauvegarde…');const meta=await getDoc(base);if(!meta.exists())throw Error('Aucune sauvegarde trouvée pour cet univers.');
+  const [vSnap,tSnap]=await Promise.all([getDocs(collection(base,'vetements')),getDocs(collection(base,'tenues'))]);
+  const vv=vSnap.docs.map(d=>d.data()),tt=tSnap.docs.map(d=>d.data());
+  if(!confirm('Sauvegarde trouvée : '+vv.length+' vêtements et '+tt.length+' tenues. Fusionner avec tes données locales ? Aucun vêtement local ne sera supprimé.')){etat('Restauration annulée.');return}
+  const byId=new Map(vetements.map(v=>[String(v.id),v]));for(const v of vv)if(!byId.has(String(v.id)))byId.set(String(v.id),v);
+  const looks=new Map(tenues.map(t=>[String(t.id),t]));for(const t of tt)if(!looks.has(String(t.id)))looks.set(String(t.id),t);
+  const oldV=vetements,oldT=tenues;vetements=[...byId.values()];tenues=[...looks.values()];
+  try{sauver()}catch(e){vetements=oldV;tenues=oldT;throw Error('Stockage local insuffisant pour restaurer les photos. Rien n’a été remplacé.')}
+  afficher();etat('✓ Restauration terminée. '+vv.length+' vêtements trouvés en ligne ; données locales conservées.');
+ }catch(e){etat(err(e))}
+};
 </script>
 </body>
 </html>
