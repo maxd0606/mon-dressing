@@ -621,7 +621,58 @@ body:has(#idees:not(.hidden)) #recherche{display:none!important}
 .md-compose-note-label small{color:#9f8a6f}
 #creation .md-compose-save{display:block;width:100%;padding:17px 10px;margin-top:22px;border-radius:14px;background:linear-gradient(110deg,#efd6a4,#b78e55);color:#21180f;font-size:15px;font-weight:700}
 @media(min-width:560px){#creation .md-compose-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-</style></head>
+</style><meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mon Dressing">
+<meta name="theme-color" content="#11100e">
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="512x512" href="./md-icon-512.png">
+<style>
+/* Logo centré et transition haute couture à la sélection de l'univers */
+#bienvenue .univers-md-logo{box-sizing:border-box!important;display:flex!important;align-items:center!important;justify-content:center!important;position:relative!important;margin:0 auto 16px!important;padding:0!important;line-height:1!important;text-align:center!important;transform:none!important;flex-shrink:0;letter-spacing:-2px!important;text-indent:-2px}
+#bienvenue .univers-signature,#bienvenue .welcome>h1{text-align:center!important}
+#bienvenue .univers-illustrations{align-items:stretch}
+#bienvenue .univers-illustrations .choice{position:relative;overflow:hidden;transition:transform .38s cubic-bezier(.2,.8,.2,1),box-shadow .38s,border-color .38s;touch-action:manipulation}
+#bienvenue .univers-illustrations .choice:active{transform:scale(.97)}
+#bienvenue .univers-illustrations .choice.md-univers-selected{transform:scale(1.045);border-color:#d5a44f!important;box-shadow:0 0 0 2px #d9b878,0 12px 42px #d3ad7780!important;z-index:2}
+#bienvenue .univers-illustrations .choice.md-univers-faded{opacity:.4;transform:scale(.95);filter:grayscale(.45);transition:all .4s ease}
+#bienvenue .univers-illustrations .choice.md-univers-selected:after{content:'';position:absolute;inset:-70%;pointer-events:none;background:linear-gradient(110deg,transparent 43%,#fff6dba6 50%,transparent 57%);transform:translateX(-100%) rotate(12deg);animation:mdUniversLueur .65s ease-out both}
+#bienvenue .md-univers-sparkle{position:absolute;width:7px;height:7px;background:#f8d891;box-shadow:0 0 10px #f8d891;pointer-events:none;border-radius:50%;left:50%;top:50%;animation:mdUniversEtincelle .65s ease-out forwards;z-index:5}
+#bienvenue.md-univers-transition .univers-md-logo{animation:mdUniversLogo .6s ease-in-out}
+@keyframes mdUniversLueur{to{transform:translateX(100%) rotate(12deg)}}
+@keyframes mdUniversEtincelle{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}20%{opacity:1}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.1)}}
+@keyframes mdUniversLogo{0%,100%{box-shadow:0 0 0 6px #b99a5f15}45%{box-shadow:0 0 0 12px #d9b77e40,0 0 28px #d9b77e85}}
+@media(prefers-reduced-motion:reduce){#bienvenue .univers-illustrations .choice,#bienvenue .univers-illustrations .choice:after,#bienvenue .md-univers-sparkle,#bienvenue .univers-md-logo{animation:none!important;transition:none!important}}
+</style><style>
+/* Conseil photo affiché uniquement à la première prise de photo */
+.md-photo-guide[hidden]{display:none!important}
+.md-photo-guide{position:fixed;inset:0;z-index:99999;background:rgba(8,7,6,.82);display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+.md-photo-guide-panel{width:100%;max-width:380px;border:1px solid #a88959;border-radius:25px;background:radial-gradient(ellipse at top,#403125,#191410 72%);padding:29px 23px 24px;box-shadow:0 20px 70px #0009;text-align:center;color:#f3e6d2}
+.md-photo-guide-symbol{width:65px;height:65px;margin:0 auto 17px;border:1.5px solid #c4a16b;border-radius:50%;display:grid;place-items:center;font-size:29px;color:#e9cb94}
+.md-photo-guide-eyebrow{font-size:10px;letter-spacing:2px;color:#c8a979}
+.md-photo-guide-panel h2{font:normal 30px/1.16 Georgia,serif;color:#f5e6ce;margin:12px 0 13px}
+.md-photo-guide-panel p{font-size:14px;line-height:1.7;color:#d6c5ae;margin:0 0 13px}
+.md-photo-guide-tips{margin:17px 0 23px;padding:14px;text-align:left;background:#2b231c;border:1px solid #5d4a33;border-radius:15px}
+.md-photo-guide-tips div{font-size:13px;line-height:1.5;padding:7px 0;color:#ebdcc6}
+.md-photo-guide-tips div+div{border-top:1px solid #4b3a2a}
+.md-photo-guide-tips b{color:#e3bd81;font-weight:normal;margin-right:7px}
+.md-photo-guide-go{display:block;width:100%;min-height:54px;border:0;border-radius:13px;background:linear-gradient(105deg,#efd5a2,#b88d53);color:#21170e;font-size:15px;font-weight:700}
+.md-photo-guide-later{display:block;margin:13px auto 0;background:none;border:0;color:#b9a68d;font-size:12px;padding:8px}
+</style>
+<style>
+#detailsLookContenu .md-conseil-categorie{margin:20px auto 14px;text-align:center;font-size:11px;letter-spacing:2.1px;color:#d4b27e}
+#detailsLookContenu .md-conseil-phrase{font:italic 23px/1.6 Georgia,serif;color:#f0ddbc;text-align:center;margin:18px 0 30px;padding:15px 6px}
+#detailsLookContenu .md-detail-kicker{text-align:center}
+#detailsLookContenu h2{text-align:center}
+</style><style>
+/* Sélecteur d'univers façon maison de couture, sans roue de paramètres */
+header .topbar{grid-template-columns:44px minmax(0,1fr) 119px!important}
+.md-univers-corner.md-univers-chic{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:1px!important;width:116px!important;max-width:116px!important;min-height:49px!important;padding:4px 6px!important;border:1px solid #b99a6b!important;border-radius:13px!important;background:linear-gradient(150deg,#2e251d,#17130f)!important;color:#e8c992!important;box-shadow:inset 0 1px 0 #f2d3a621!important}
+.md-univers-chic svg{display:block;flex-shrink:0}
+.md-univers-chic span{font-size:9px!important;letter-spacing:.45px;line-height:1.1;font-family:Georgia,serif}
+.md-univers-chic:active{transform:scale(.96);background:#3d2c1c!important}
+@media(max-width:360px){header .topbar{grid-template-columns:40px minmax(0,1fr) 105px!important}.md-univers-corner.md-univers-chic{width:102px!important;max-width:102px!important}}
+</style><style>.md-univers-corner.md-univers-chic .md-symboles-sexes{display:flex;align-items:center;justify-content:center;gap:8px;font-family:Georgia,serif;font-size:21px;line-height:1;color:#e8c992;letter-spacing:0}.md-univers-corner.md-univers-chic .md-symbol-sep{font-size:13px;opacity:.65}.md-univers-corner.md-univers-chic{width:75px!important;max-width:75px!important;min-width:75px!important}.md-univers-corner.md-univers-chic svg{display:none!important}header .topbar{grid-template-columns:44px minmax(0,1fr) 75px!important}@media(max-width:360px){header .topbar{grid-template-columns:40px minmax(0,1fr) 75px!important}}</style></head>
 <body><script>
 /* Sécurité de démarrage indépendante du code principal. */
 (function(){
@@ -700,14 +751,14 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   <h1>Choisis ton univers</h1>
   
   <div class="choice-grid univers-illustrations">
-   <button class="choice" onclick="choisirUnivers('homme')"><img class="univers-personnage" src="data:image/png;base64,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" alt="Silhouette d’un homme en costume noir et chapeau"><strong>Homme</strong><small>Costume noir · chapeau</small></button>
-   <button class="choice" onclick="choisirUnivers('femme')"><img class="univers-personnage" src="data:image/png;base64,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" alt="Silhouette d’une femme en robe noire et chapeau"><strong>Femme</strong><small>Robe noire · chapeau</small></button>
+   <button class="choice" onclick="mdChoisirUniversAnime('homme',this)"><img class="univers-personnage" src="data:image/png;base64,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" alt="Silhouette d’un homme en costume noir et chapeau"><strong>Homme</strong><small>Costume noir · chapeau</small></button>
+   <button class="choice" onclick="mdChoisirUniversAnime('femme',this)"><img class="univers-personnage" src="data:image/png;base64,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" alt="Silhouette d’une femme en robe noire et chapeau"><strong>Femme</strong><small>Robe noire · chapeau</small></button>
   </div>
   <p class="note">Tu pourras changer ce choix à tout moment.</p>
  </div>
 </div>
 <header>
- <div class="topbar"><button type="button" id="mdLoupe" onclick="mdRecherche()" aria-label="Rechercher un vêtement">⌕</button><h1>MD</h1><button type="button" class="md-univers-corner" onclick="changerUnivers()" aria-label="Changer d’univers" title="Changer d’univers">⚙ <span>Univers</span></button></div>
+ <div class="topbar"><button type="button" id="mdLoupe" onclick="mdRecherche()" aria-label="Rechercher un vêtement">⌕</button><h1>MD</h1><button type="button" class="md-univers-corner md-univers-chic" onclick="changerUnivers()" aria-label="Changer entre Homme et Femme" title="Choisir Homme ou Femme"><svg viewBox="0 0 32 24" width="29" height="23" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="9" cy="5.5" r="3"/><path d="M3.5 20v-4.5c0-3.2 2.4-5.3 5.5-5.3s5.5 2.1 5.5 5.3V20M3.5 20h11"/><circle cx="23" cy="5.5" r="3"/><path d="M18.5 14c.6-2.4 2.2-3.8 4.5-3.8s3.9 1.4 4.5 3.8l2 6H16.5l2-6z"/></svg><span class="md-symboles-sexes" aria-hidden="true"><span>♂</span><span class="md-symbol-sep">·</span><span>♀</span></span></button></div>
  
  <input class="searchbar hidden" id="recherche" placeholder="🔎 Rechercher un vêtement..." oninput="afficher()" aria-label="Rechercher un vêtement">
 </header>
@@ -1559,9 +1610,9 @@ function afficherCarteSwipe(){
  const p=liste[i],mode=analyseMode(p.groupe);
  zone.innerHTML=`<article class="swipe-card" id="carteSwipe" onclick="ouvrirDetailsLook()">
  <div class="swipe-label yes">J'AIME ♥</div><div class="swipe-label no">PASSER ✕</div>
- <div class="look-cover"><img id="photoLookCompose" alt="Composition complète de la tenue sur un seul visuel"><span class="md-detail-hint">⌕ Voir les pièces de ce look</span></div>
+ <div class="look-cover"><img id="photoLookCompose" alt="Composition complète de la tenue sur un seul visuel"><span class="md-detail-hint">✦ Le conseil de MD</span></div>
  <div class="look-copy"><small>${echapper(nomStyle())} · LOOK ${i+1}</small><h3>${echapper(mode.titre)}</h3>
- <p>${echapper(mode.explication)}</p><p class="note">Touchez pour voir les pièces et les marques</p></div></article>`;
+ <p>${echapper(mode.explication)}</p><p class="note">Touche la photo pour découvrir le conseil de MD</p></div></article>`;
  compteur.textContent=`Look ${i+1} sur ${liste.length}`;
  activerGestesSwipe();
  composerPhotoLook(p.groupe,document.getElementById('photoLookCompose'));
@@ -1665,12 +1716,74 @@ function choixSwipe(aime){
   document.getElementById('swipeCompteur').textContent='Ajoute de nouveaux vêtements pour découvrir davantage de looks.';
  }
 }
+function mdConseilLook(proposition){
+ const style=window.styleLook||styleLook||'chic';
+ const pieces=proposition&&Array.isArray(proposition.groupe)?proposition.groupe:[];
+ const normal=t=>String(t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+ const nom=v=>String(v.nom||v.categorie||'cette pièce').trim();
+ const texte=v=>normal([v.nom,v.categorie].join(' '));
+ const est=(v,re)=>re.test(texte(v));
+ const haut=pieces.find(v=>est(v,/pull|sweat|t.shirt|polo|chemise|blouse|debardeur|top|cardigan/));
+ const bas=pieces.find(v=>est(v,/pantalon|jean|chino|jupe|short|bermuda|jogging/));
+ const veste=pieces.find(v=>est(v,/veste|blazer|manteau|trench|blouson|doudoune|surchemise/));
+ const chaussures=pieces.find(v=>est(v,/chaussure|basket|sneaker|mocassin|botte|bottine|escarpin|talon|derby|richelieu/));
+ const robe=pieces.find(v=>est(v,/robe|combinaison/));
+ const accessoire=pieces.find(v=>est(v,/sac|montre|ceinture|casquette|bob|bonnet|bijou|collier|bague|bracelet|foulard|echarpe/));
+ const palette=[...new Set(pieces.map(v=>String(v.couleur||'').trim().toLowerCase()).filter(Boolean))];
+ const styles={soiree:'SOIRÉE & HABILLÉ',chic:'CHIC & ÉLÉGANT',casual:'DÉCONTRACTÉ CHIC'};
+ const debuts={
+  soiree:['Pour cette soirée, je miserais sur','Pour une allure qui attire le regard avec subtilité, je choisirais','Pour une occasion habillée, cette association met en avant','Ce soir, l’élégance se joue autour de'],
+  chic:['Pour une élégance naturelle, je privilégierais','Je trouve particulièrement raffiné le dialogue entre','Pour une silhouette soignée sans en faire trop, j’aime','Cette composition mise sur'],
+  casual:['Pour une journée stylée et confortable, je choisirais','Le charme décontracté de ce look repose sur','Pour une allure facile à porter, j’associerais','Cette tenue trouve son équilibre grâce à']
+ };
+ const descriptions=[];
+ if(robe)descriptions.push('la pièce forte qu’est '+nom(robe));
+ if(haut&&bas)descriptions.push(nom(haut)+' et '+nom(bas));
+ else if(haut)descriptions.push(nom(haut));
+ else if(bas)descriptions.push(nom(bas));
+ if(veste)descriptions.push(nom(veste)+' qui structure la silhouette');
+ if(chaussures)descriptions.push(nom(chaussures)+' pour finaliser l’ensemble');
+ if(accessoire)descriptions.push(nom(accessoire)+' en touche finale');
+ if(!descriptions.length)descriptions.push(pieces.map(nom).slice(0,2).join(' et ')||'les pièces de ta collection');
+ const palettePhrases=palette.length===1?[
+  'La nuance '+palette[0]+' crée une belle continuité.','Le choix du '+palette[0]+' donne une vraie identité à ce look.'
+ ]:palette.length===2?[
+  'Les tons '+palette[0]+' et '+palette[1]+' se répondent avec élégance.',
+  'Le contraste entre '+palette[0]+' et '+palette[1]+' apporte du relief à la tenue.'
+ ]:palette.length>2?[
+  'Les différentes couleurs donnent du caractère à cette composition.',
+  'La palette variée apporte une note personnelle à l’ensemble.'
+ ]:['L’équilibre des pièces donne du caractère à cette silhouette.','Chaque élément trouve naturellement sa place dans ce look.'];
+ const fins={
+  soiree:['Une proposition que je trouve idéale pour une soirée où tu veux te sentir à ton avantage.','Le résultat est habillé, avec une vraie personnalité.','Un ensemble pensé pour marquer l’occasion sans en faire trop.'],
+  chic:['L’ensemble donne une impression soignée et intemporelle.','Une silhouette qui cultive le raffinement dans les détails.','C’est ce mélange de pièces qui donne son élégance au look.'],
+  casual:['Le résultat reste facile à porter, sans perdre en style.','Un bel équilibre entre confort et allure.','De quoi être à l’aise tout en gardant une silhouette travaillée.']
+ };
+ const signature=style+'|'+pieces.map(v=>v.id||[v.nom,v.categorie,v.couleur].join('/')).sort().join('|');
+ let h=2166136261;for(const c of signature){h=Math.imul(h^c.charCodeAt(0),16777619)>>>0;}
+ const a=debuts[style]||debuts.chic;
+ const f=fins[style]||fins.chic;
+ const intro=a[h%a.length];
+ const coeur=descriptions[(h>>>3)%descriptions.length];
+ const nuance=palettePhrases[(h>>>5)%palettePhrases.length];
+ const fin=f[(h>>>7)%f.length];
+ // Le conseil est lié à la composition réelle et reste stable si on rouvre la même tenue.
+ const phrase=intro+' '+coeur+'. '+nuance+' '+fin;
+ return [styles[style]||styles.chic,phrase];
+}
 function ouvrirDetailsLook(){
  const p=(window.suggestionsActuelles||[])[window.indexSwipe||0];
  if(!p)return;
- const m=analyseMode(p.groupe);
- const items=p.groupe.map(v=>`<div class="details-item"><img src="${v.photo}" alt="${echapper(v.nom)}"><div class="md-detail-desc"><strong>${echapper(v.nom)}</strong><p>${echapper(v.categorie||'Vêtement')} · ${echapper(v.couleur||'Couleur non renseignée')}</p><p>${echapper(v.marque||'Marque non renseignée')}</p></div></div>`).join('');
- document.getElementById('detailsLookContenu').innerHTML=`<div class="md-detail-kicker">MON DRESSING · LES PIÈCES</div><h2>${echapper(m.titre)}</h2><p class="md-detail-intro">${p.groupe.length} pièce${p.groupe.length>1?'s':''} de ton dressing dans cette tenue</p>${items}<div class="md-detail-footer"><button type="button" onclick="fermerDetailsLook();choixSwipe(true)">♥ J’aime cette tenue</button></div>`;
+ const [categorie,conseil]=mdConseilLook(p);
+ const contenu=document.getElementById('detailsLookContenu');
+ contenu.replaceChildren();
+ const kicker=document.createElement('div');kicker.className='md-detail-kicker';kicker.textContent='MON DRESSING · CONSEIL STYLE';
+ const titre=document.createElement('h2');titre.textContent='L’avis de MD';
+ const cat=document.createElement('div');cat.className='md-conseil-categorie';cat.textContent=categorie;
+ const phrase=document.createElement('p');phrase.className='md-conseil-phrase';phrase.textContent='« '+conseil+' »';
+ const bas=document.createElement('div');bas.className='md-detail-footer';
+ const bouton=document.createElement('button');bouton.type='button';bouton.textContent='♥ J’aime cette tenue';bouton.addEventListener('click',()=>{fermerDetailsLook();choixSwipe(true)});
+ bas.appendChild(bouton);contenu.append(kicker,titre,cat,phrase,bas);
  document.getElementById('detailsLookOverlay').classList.add('ouvert');
  document.body.classList.add('md-detail-open');
 }
@@ -1884,5 +1997,73 @@ document.addEventListener('DOMContentLoaded',()=>{
  document.addEventListener('click',e=>{if(!e.target.closest('.md-type-precis')){const b=document.getElementById('mdListeTypes');if(b)b.hidden=true}});
 });
 })();
-</script></body>
+</script><script>
+let mdUniversChoixEnCours=false;
+function mdChoisirUniversAnime(universChoisi,bouton){
+ if(mdUniversChoixEnCours)return;
+ const overlay=document.getElementById('bienvenue');
+ if(!overlay||!bouton){choisirUnivers(universChoisi);return;}
+ mdUniversChoixEnCours=true;
+ overlay.classList.add('md-univers-transition');
+ overlay.querySelectorAll('.univers-illustrations .choice').forEach(el=>{
+  el.classList.toggle('md-univers-selected',el===bouton);
+  el.classList.toggle('md-univers-faded',el!==bouton);
+ });
+ if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+  for(let i=0;i<13;i++){
+   const point=document.createElement('i');point.className='md-univers-sparkle';
+   const angle=(i/13)*Math.PI*2,dist=48+(i%3)*28;
+   point.style.setProperty('--dx',Math.round(Math.cos(angle)*dist)+'px');
+   point.style.setProperty('--dy',Math.round(Math.sin(angle)*dist)+'px');
+   bouton.appendChild(point);
+  }
+ }
+ window.setTimeout(()=>{
+  try{choisirUnivers(universChoisi)}finally{
+   overlay.classList.remove('md-univers-transition');
+   overlay.querySelectorAll('.univers-illustrations .choice').forEach(el=>el.classList.remove('md-univers-selected','md-univers-faded'));
+   overlay.querySelectorAll('.md-univers-sparkle').forEach(el=>el.remove());
+   mdUniversChoixEnCours=false;
+  }
+ },window.matchMedia('(prefers-reduced-motion: reduce)').matches?100:650);
+}
+</script><div id="mdPremierConseilPhoto" class="md-photo-guide" hidden role="dialog" aria-modal="true" aria-labelledby="mdConseilPhotoTitre">
+ <div class="md-photo-guide-panel">
+  <div class="md-photo-guide-symbol" aria-hidden="true">✦</div>
+  <div class="md-photo-guide-eyebrow">MON DRESSING · CONSEIL PHOTO</div>
+  <h2 id="mdConseilPhotoTitre">Sublime ta première pièce</h2>
+  <p>Pour que tes vêtements soient beaux et bien visibles dans tes futurs looks, voici une petite astuce.</p>
+  <div class="md-photo-guide-tips">
+   <div><b>01</b> Pose ton vêtement bien à plat, sur le sol ou une surface unie et propre.</div>
+   <div><b>02</b> Ne mets rien autour : laisse le vêtement seul dans la photo.</div>
+   <div><b>03</b> Écarte les manches, évite les plis et prends la photo bien au-dessus, avec une bonne lumière.</div>
+  </div>
+  <button type="button" class="md-photo-guide-go" onclick="mdValiderConseilPhoto()">✦ J'ai compris, prendre ma photo</button>
+  <button type="button" class="md-photo-guide-later" onclick="mdFermerConseilPhoto()">Plus tard</button>
+ </div>
+</div>
+<script>
+(function(){
+ const cle='md_conseil_premiere_photo_v1';
+ document.addEventListener('DOMContentLoaded',function(){
+  const input=document.getElementById('photo');
+  if(!input)return;
+  input.addEventListener('click',function(e){
+   try{if(localStorage.getItem(cle)==='vu')return;}catch(err){}
+   if(window.mdPhotoGuideAutorise)return;
+   e.preventDefault();e.stopImmediatePropagation();
+   const modal=document.getElementById('mdPremierConseilPhoto');
+   if(modal){modal.hidden=false;modal.querySelector('.md-photo-guide-go')?.focus();}
+  },true);
+ });
+ window.mdValiderConseilPhoto=function(){
+  try{localStorage.setItem(cle,'vu');}catch(err){}
+  document.getElementById('mdPremierConseilPhoto').hidden=true;
+  const input=document.getElementById('photo');
+  if(input){window.mdPhotoGuideAutorise=true;input.click();window.mdPhotoGuideAutorise=false;}
+ };
+ window.mdFermerConseilPhoto=function(){document.getElementById('mdPremierConseilPhoto').hidden=true;};
+})();
+</script>
+</body>
 </html>
