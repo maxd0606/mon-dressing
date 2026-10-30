@@ -672,7 +672,10 @@ header .topbar{grid-template-columns:44px minmax(0,1fr) 119px!important}
 .md-univers-chic span{font-size:9px!important;letter-spacing:.45px;line-height:1.1;font-family:Georgia,serif}
 .md-univers-chic:active{transform:scale(.96);background:#3d2c1c!important}
 @media(max-width:360px){header .topbar{grid-template-columns:40px minmax(0,1fr) 105px!important}.md-univers-corner.md-univers-chic{width:102px!important;max-width:102px!important}}
-</style><style>.md-univers-corner.md-univers-chic .md-symboles-sexes{display:flex;align-items:center;justify-content:center;gap:8px;font-family:Georgia,serif;font-size:21px;line-height:1;color:#e8c992;letter-spacing:0}.md-univers-corner.md-univers-chic .md-symbol-sep{font-size:13px;opacity:.65}.md-univers-corner.md-univers-chic{width:75px!important;max-width:75px!important;min-width:75px!important}.md-univers-corner.md-univers-chic svg{display:none!important}header .topbar{grid-template-columns:44px minmax(0,1fr) 75px!important}@media(max-width:360px){header .topbar{grid-template-columns:40px minmax(0,1fr) 75px!important}}</style></head>
+</style><style>.md-univers-corner.md-univers-chic .md-symboles-sexes{display:flex;align-items:center;justify-content:center;gap:8px;font-family:Georgia,serif;font-size:21px;line-height:1;color:#e8c992;letter-spacing:0}.md-univers-corner.md-univers-chic .md-symbol-sep{font-size:13px;opacity:.65}.md-univers-corner.md-univers-chic{width:75px!important;max-width:75px!important;min-width:75px!important}.md-univers-corner.md-univers-chic svg{display:none!important}header .topbar{grid-template-columns:44px minmax(0,1fr) 75px!important}@media(max-width:360px){header .topbar{grid-template-columns:40px minmax(0,1fr) 75px!important}}</style><style>
+#mdDemarrageSwipe:not(.hidden){z-index:99999!important;position:fixed!important;inset:0!important;display:grid!important;place-items:center!important}
+#mdDemarrageSwipe.hidden{display:none!important}
+</style></head>
 <body><script>
 /* Sécurité de démarrage indépendante du code principal. */
 (function(){
@@ -1263,15 +1266,21 @@ function choisirUnivers(u){
  retourChoixStyleMD();
  document.body.classList.toggle('mode-homme',u==='homme');
  document.getElementById('bienvenue').classList.add('hidden');
- afficher();
  document.getElementById('mdPremierePieces').classList.add('hidden');
+ // Après le choix de l'univers, on ouvre TOUJOURS le parcours des looks,
+ // jamais directement « Mes pièces ».
  page('idees');
- // Montrer immédiatement la préparation après le choix Homme/Femme.
- if(!mdCompteDemarrage().pret){
-  const depart=document.getElementById('mdDemarrageSwipe');
-  depart.classList.remove('hidden');
- }
  mdActualiserDemarrage();
+ const depart=document.getElementById('mdDemarrageSwipe');
+ if(!mdCompteDemarrage().pret){
+  depart.classList.remove('hidden');
+  depart.setAttribute('aria-modal','true');
+  document.querySelector('main').scrollTop=0;
+ }else{
+  depart.classList.add('hidden');
+  document.getElementById('questionStyleMD').classList.remove('hidden');
+  document.getElementById('espaceSwipeMD').classList.add('hidden');
+ }
 }
 function ajusterAccueil(){const pret=vetements.length>0||localStorage.getItem(cleUnivers('accueil'))==='oui';document.body.classList.toggle('dressing-pret',pret);document.getElementById('titreDressing').textContent=pret?'Mon dressing ♡':'Bienvenue dans ton dressing ♡'}
 function changerUnivers(){document.getElementById('bienvenue').classList.remove('hidden')}
